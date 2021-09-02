@@ -7,7 +7,7 @@
 
 #### 关于AForge.NET
 
- AForge.NET 是一个C#语言的人工智能类库，提供包含机器学习，神经网络，图像处理等代码实现。更详细的内容可查看[官网](www.aforgenet.com/framework/)
+ AForge.NET 是一个C#语言的人工智能类库，提供包含机器学习，神经网络，图像处理等代码实现。更详细的内容可查看[官网](http://www.aforgenet.com/framework/)
 
 
 
