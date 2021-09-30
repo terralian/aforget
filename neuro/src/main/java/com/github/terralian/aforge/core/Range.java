@@ -94,10 +94,11 @@ public class Range {
     }
     
     /**
-     * Check if this instance of <see cref="Range"/> equal to the specified one.
+     * Check if this instance of {@link Range} equal to the specified one.
      * 
      * @param Another range to check equalty to.
      */
+    @Override
     public boolean equals(Object obj) {
         return (obj instanceof Range) ? (equals(this, (Range) obj)) : false;
     }
