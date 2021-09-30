@@ -88,16 +88,18 @@ public class Range {
      * 
      * @param range1 第一个要检查的区间.
      * @param range2 第二个要检查的区间.
-     * @return <b>True</b> 表示两个区间的最大值及最小值相同.
+     * @return <b>True</b> 表示两个区间的最大值及最小值相等.
      */
     public static boolean equals(Range range1, Range range2) {
         return ((range1.min == range2.min) && (range1.max == range2.max));
     }
     
     /**
-     * Check if this instance of {@link Range} equal to the specified one.
+     * 检查该实例{@link Range}是否与指定实例相等.
+     * <p>
+     * 若参数非{@link Range}，返回false
      * 
-     * @param Another range to check equalty to.
+     * @param obj 指定的区间.
      */
     @Override
     public boolean equals(Object obj) {
@@ -105,54 +107,46 @@ public class Range {
     }
 
     /**
-     * Inequality operator - checks if two ranges have different min/max values.
+     * 检查两个区间是否不相等（最小值，最大值存在至少一个不同）.
      * 
-     * @param range1 First range to check.
-     * @param range2 Second range to check.
-     * @return <b>True</b> if min/max values of specified ranges are not equal.
+     * @param range1 第一个要检查的区间.
+     * @param range2 第二个要检查的区间.
+     * @return <b>True</b> 表示两个区间的最大值及最小值不相等.
      */
     public static boolean notEquals(Range range1, Range range2) {
         return ((range1.min != range2.min) || (range1.max != range2.max));
     }
 
     /**
-     * Length of the range (deffirence between maximum and minimum values).
+     * 区间长度 (最大值与最小值的差).
      */
     public float length() {
         return max - min;
     }
 
     /**
-     * Minimum value of the range.
-     * <p>
-     * The property represents minimum value (left side limit) or the range - [<b>min</b>, max].
+     * 获取区间最小值.
      */
     public float getMin() {
         return min;
     }
 
     /**
-     * Minimum value of the range.
-     * <p>
-     * The property represents minimum value (left side limit) or the range - [<b>min</b>, max].
+     * 设置区间最小值
      */
     public void setMin(float min) {
         this.min = min;
     }
 
     /**
-     * Maximum value of the range.
-     * <p>
-     * The property represents maximum value (right side limit) or the range - [min, <b>max</b>].
+     * 获取区间最大值
      */
     public float getMax() {
         return max;
     }
 
     /**
-     * Maximum value of the range.
-     * <p>
-     * The property represents maximum value (right side limit) or the range - [min, <b>max</b>].
+     * 设置区间最大值
      */
     public void setMax(float max) {
         this.max = max;
