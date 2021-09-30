@@ -17,15 +17,12 @@ import com.github.terralian.aforge.genetic.selection.ISelectionMethod;
 import com.github.terralian.csharp.LangUtil;
 
 /**
- * Population of chromosomes.
+ * 染色体的种群（Population）.
  * <p>
- * The class represents population - collection of individuals (chromosomes)
- * and provides functionality for common population's life cycle - population growing
- * with help of genetic operators and selection of chromosomes to new generation
- * with help of selection algorithm. The class may work with any type of chromosomes
- * implementing {@link IChromosome} interface, use any type of fitness functions
- * implementing {@link IFitnessFunction} interface and use any type of selection
- * algorithms implementing {@link ISelectionMethod} interface.
+ * 该类表示一个种群 - 收集个体（染色体）并提供实用及公共的种群生命周期 - 借助遗传算子来扩大种群数量，
+ * 借助选择算法对染色体进行选择，生成新一代的染色体. 该类可以与任意染色体{@link IChromosome}接口实例
+ * 一起工作，并使用任意适应度函数(Fitness Function){@link IFitnessFunction}接口实例及使用任意
+ * 选择算法{@link ISelectionMethod}接口实例.
  * 
  */
 public class Population {
@@ -37,11 +34,11 @@ public class Population {
     private double randomSelectionPortion = 0.0;
     private boolean autoShuffling = false;
 
-    // population parameters
+    // 种群参数
     private double crossoverRate = 0.75;
     private double mutationRate = 0.10;
 
-    // random number generator
+    // 随机数生成器
     private static ThreadLocalRandom rand = ThreadLocalRandom.current();
 
     //
@@ -51,17 +48,15 @@ public class Population {
     private IChromosome bestChromosome = null;
 
     /**
-     * Initializes a new instance of the {@link Population} class.
+     * 初始化一个种群{@link Population}实例.
      * <p>
-     * Creates new population of specified size. The specified ancestor
-     * becomes first member of the population and is used to create other members
-     * with same parameters, which were used for ancestor's creation.
+     * 创建一个指定大小的种群. 祖先染色体将作为种群的第一个成员，并使用统一的参数创建剩下的其他成员.
      * 
-     * @param size Initial size of population.
-     * @param ancestor Ancestor chromosome to use for population creatioin.
-     * @param fitnessFunction Fitness function to use for calculating chromosome's fitness values.
-     * @param selectionMethod Selection algorithm to use for selection chromosome's to new generation.
-     * @throws IllegalArgumentException Too small population's size was specified. The exception is thrown in the case if size is smaller than 2.
+     * @param size 种群大小初始值.
+     * @param ancestor 用于创建种群的先祖染色体.
+     * @param fitnessFunction 用于计算染色体适应值的适应度函数.
+     * @param selectionMethod 用于选择新一代染色体的选择算法.
+     * @throws IllegalArgumentException 指定的种群规模太小。若size小于2，则抛出该异常.
      */
     public Population(int size, IChromosome ancestor, IFitnessFunction fitnessFunction, ISelectionMethod selectionMethod) {
         if (size < 2)
@@ -71,65 +66,63 @@ public class Population {
         this.selectionMethod = selectionMethod;
         this.size = size;
 
-        // add ancestor to the population
+        // 将祖先添加到种群
         ancestor.evaluate(fitnessFunction);
         population.add(ancestor.clone());
-        // add more chromosomes to the population
+        // 添加更多的染色体到种群
         for (int i = 1; i < size; i++) {
-            // create new chromosome
+            // 创建新的染色体
             IChromosome c = ancestor.createNew();
-            // calculate it's fitness
+            // 计算其适应度
             c.evaluate(fitnessFunction);
-            // add it to population
+            // 添加到种群
             population.add(c);
         }
     }
 
     /**
-     * Regenerate population.
+     * 重新生成种群.
      * <p>
-     * The method regenerates population filling it with random chromosomes.
+     * 该方法使用随机染色体重新生成种群.
      */
     public void regenerate() {
         IChromosome ancestor = population.get(0);
 
-        // clear population
+        // 清空种群
         population.clear();
-        // add chromosomes to the population
+        // 添加染色体到种群
         for (int i = 0; i < size; i++) {
-            // create new chromosome
+            // 创建新染色体
             IChromosome c = ancestor.createNew();
-            // calculate it's fitness
+            // 计算其适应度
             c.evaluate(fitnessFunction);
-            // add it to population
+            // 添加到种群
             population.add(c);
         }
     }
 
     /**
-     * Do crossover in the population.
+     * 执行种群交叉（crossover）.
      * <p>
-     * The method walks through the population and performs crossover operator
-     * taking each two chromosomes in the order of their presence in the population.
-     * The total amount of paired chromosomes is determined by {@link #crossoverRate}
+     * 该方法遍历种群并按顺序对每两条染色体执行交叉算子. 配对的染色体总数由交叉概率（{@link #crossoverRate}）决定
      */
     public void crossover() {
-        // crossover
+        // 交叉
         for (int i = 1; i < size; i += 2) {
-            // generate next random number and check if we need to do crossover
+            // 生成下一个随机数，并判断是否需要进行交叉
             if (rand.nextDouble() <= crossoverRate) {
-                // clone both ancestors
+                // 克隆自身及祖先
                 IChromosome c1 = population.get(i - 1).clone();
                 IChromosome c2 = population.get(i).clone();
 
-                // do crossover
+                // 执行交叉
                 c1.crossover(c2);
 
-                // calculate fitness of these two offsprings
+                // 对后代计算适应度
                 c1.evaluate(fitnessFunction);
                 c2.evaluate(fitnessFunction);
 
-                // add two new offsprings to the population
+                // 将后代添加到种群
                 population.add(c1);
                 population.add(c2);
             }
@@ -137,53 +130,49 @@ public class Population {
     }
 
     /**
-     * Do mutation in the population.
+     * 执行种群突变.
      * <p>
-     * The method walks through the population and performs mutation operator
-     * taking each chromosome one by one. The total amount of mutated chromosomes is
-     * determined by {@link #mutationRate}.
+     * 该方法遍历种群，对每一个染色体执行突变操作. 突变的染色体总数由突变概率（{@link #mutationRate}）决定.
      */
     public void mutate() {
-        // mutate
+        // 突变
         for (int i = 0; i < size; i++) {
-            // generate next random number and check if we need to do mutation
+            // 生成下一个随机数并判断是否进行突变
             if (rand.nextDouble() <= mutationRate) {
-                // clone the chromosome
+                // 克隆染色体
                 IChromosome c = population.get(i).clone();
-                // mutate it
+                // 突变
                 c.mutate();
-                // calculate fitness of the mutant
+                // 对突变型计算适应度
                 c.evaluate(fitnessFunction);
-                // add mutant to the population
+                // 将突变型加入到种群
                 population.add(c);
             }
         }
     }
 
     /**
-     * Do selection.<p>
-     * The method applies selection operator to the current population. Using
-     * specified selection algorithm it selects members to the new generation from current
-     * generates and adds certain amount of random members, if is required
-     * (see <see cref="RandomSelectionPortion"/>).
+     * 执行选择.<p>
+     * 该方法对当前种群进行选择操作. 使用指定的选择算法对当前种群进行选择作为新种群，并在需要时添加定义数量的随机成员.
+     * 参考 {@link #randomSelectionPortion}
      */
     public void selection() {
-        // amount of random chromosomes in the new population
+        // 新种群中的随机染色体数量
         int randomAmount = (int) (randomSelectionPortion * size);
 
-        // do selection
+        // 执行选择
         selectionMethod.applySelection(population, size - randomAmount);
 
-        // add random chromosomes
+        // 增加随机的染色体
         if (randomAmount > 0) {
             IChromosome ancestor = population.get(0);
 
             for (int i = 0; i < randomAmount; i++) {
-                // create new chromosome
+                // 创建新染色体
                 IChromosome c = ancestor.createNew();
-                // calculate it's fitness
+                // 计算适应度
                 c.evaluate(fitnessFunction);
-                // add it to population
+                // 添加到种群
                 population.add(c);
             }
         }
@@ -192,10 +181,9 @@ public class Population {
     }
 
     /**
-     * Run one epoch of the population.
+     * 执行一个种群时期（epoch）.
      * <p>
-     * The method runs one epoch of the population, doing crossover, mutation
-     * and selection by calling {@link #crossover()}, {@link #mutate()} and
+     * 该方法执行一个种群时期（epoch），进行交叉，突变及选择。通过调用 {@link #crossover()}, {@link #mutate()} 和
      * {@link #selection()}.
      */
     public void runEpoch() {
@@ -208,7 +196,7 @@ public class Population {
     }
 
     /**
-     * Shuffle randomly current population.
+     * 对当前种群进行随机洗牌.
      * <p>
      * Population shuffling may be useful in cases when selection
      * operator results in not random order of chromosomes (for example, after elite
@@ -353,7 +341,7 @@ public class Population {
         size = newPopulationSize;
     }
 
-    // Find best chromosome in the population so far
+    // 找到种群中迄今为止最好的染色体
     private void findBestChromosome() {
         bestChromosome = population.get(0);
         fitnessMax = bestChromosome.getFitness();
@@ -362,10 +350,10 @@ public class Population {
         for (int i = 1; i < size; i++) {
             double fitness = population.get(i).getFitness();
 
-            // accumulate summary value
+            // 累加汇总值
             fitnessSum += fitness;
 
-            // check for max
+            // 检查最大值
             if (fitness > fitnessMax) {
                 fitnessMax = fitness;
                 bestChromosome = population.get(i);
