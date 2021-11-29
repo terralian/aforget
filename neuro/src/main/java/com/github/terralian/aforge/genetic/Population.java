@@ -56,7 +56,7 @@ public class Population {
      * @param ancestor 用于创建种群的先祖染色体.
      * @param fitnessFunction 用于计算染色体适应值的适应度函数.
      * @param selectionMethod 用于选择新一代染色体的选择算法.
-     * @throws IllegalArgumentException 指定的种群规模太小。若size小于2，则抛出该异常.
+     * @throws IllegalArgumentException 指定的种群规模太小.若size小于2，则抛出该异常.
      */
     public Population(int size, IChromosome ancestor, IFitnessFunction fitnessFunction, ISelectionMethod selectionMethod) {
         if (size < 2)
@@ -183,8 +183,7 @@ public class Population {
     /**
      * 执行一个种群时期（epoch）.
      * <p>
-     * 该方法执行一个种群时期（epoch），进行交叉，突变及选择。通过调用 {@link #crossover()}, {@link #mutate()} 和
-     * {@link #selection()}.
+     * 该方法执行一个种群时期（epoch），进行交叉，突变及选择.通过调用 {@link #crossover()}, {@link #mutate()} 和 {@link #selection()}.
      */
     public void runEpoch() {
         crossover();
@@ -221,7 +220,7 @@ public class Population {
     /**
      * 将染色体添加到种群.
      * <p>
-     * 该方法将指定的染色体添加到当前种群. 常用于添加某些已初始化的而非随机的染色体。
+     * 该方法将指定的染色体添加到当前种群. 常用于添加某些已初始化的而非随机的染色体.
      * <p>
      * 手动添加染色体应当非常小心，因为这可能破坏种群. 手动添加的染色体必须具有与初始化构造体时的祖先染色体一致的类型与初始化参数
      * 
@@ -235,7 +234,7 @@ public class Population {
     /**
      * 在两个种群间执行迁移（migration）.
      * <p>
-     * 该方法在两个种群之间执行迁移操作- 当前种群 和 另一个种群. 在迁移过程中，通过migrantsSelector从每个种群间选择numberOfMigrants个染色体，并将其放入另一个种群中，替换其中最差的个体。
+     * 该方法在两个种群之间执行迁移操作- 当前种群 和 另一个种群. 在迁移过程中，通过migrantsSelector从每个种群间选择numberOfMigrants个染色体，并将其放入另一个种群中，替换其中最差的个体.
      * 
      * @param anotherPopulation 需要迁移的种群.
      * @param numberOfMigrants 每个种群中需要迁移的数量.
@@ -283,7 +282,7 @@ public class Population {
     /**
      * 调整种群的大小为目标值.
      * <p>
-     * 该方法用于调整种群大小. 当种群需要增大，这里仅会增加缺少部分数量的随机染色体，当种群需要减小，这里会使用{@link #selectionMethod}选择算法来缩小种群。
+     * 该方法用于调整种群大小. 当种群需要增大，这里仅会增加缺少部分数量的随机染色体，当种群需要减小，这里会使用{@link #selectionMethod}选择算法来缩小种群.
      * 
      * @param newPopulationSize 新的种群数量.
      * @throws IllegalArgumentException 指定的种群数量太小，若newPopulationSize小于2则会抛出该异常.
@@ -295,7 +294,7 @@ public class Population {
     /**
      * 调整种群的大小为目标值.
      * <p>
-     * 该方法用于调整种群大小. 当种群需要增大，这里仅会增加缺少部分数量的随机染色体，当种群需要减小，这里会使用membersSelector选择算法来缩小种群。
+     * 该方法用于调整种群大小. 当种群需要增大，这里仅会增加缺少部分数量的随机染色体，当种群需要减小，这里会使用membersSelector选择算法来缩小种群.
      * 
      * @param newPopulationSize 新的种群数量.
      * @param membersSelector 在缩小种群时所使用的选择算法
@@ -309,7 +308,7 @@ public class Population {
             // 种群需要增长，所以这里需要增加新随机成员
 
             // 注意：在这里使用种群，应使用差值而不是使用新大小，因为种群有可能已经过交叉/变异操作增大过了.
-            // 所以这里需要保持这些成员，仅添加缺失的数量，而非添加所有。
+            // 所以这里需要保持这些成员，仅添加缺失的数量，而非添加所有.
             int toAdd = newPopulationSize - population.size();
 
             for (int i = 0; i < toAdd; i++) {
@@ -438,46 +437,38 @@ public class Population {
     }
 
     /**
-     * Selection method to use with the population.
+     * 种群的选择方法.
      * <p>
-     * The property sets selection method which is used to select
-     * population members for a new population - filter population after reproduction
-     * was done with operators like crossover and mutations.
+     * 该属性设置用于为新种群选择种群成员的选择方法 - 该方法过滤种群在种群使用如交叉突变等操作之后进行.
      */
     public ISelectionMethod getSelectionMethod() {
         return selectionMethod;
     }
 
     /**
-     * Selection method to use with the population.
+     * 种群的选择方法.
      * <p>
-     * The property sets selection method which is used to select
-     * population members for a new population - filter population after reproduction
-     * was done with operators like crossover and mutations.
+     * 该属性设置用于为新种群选择种群成员的选择方法 - 该方法过滤种群在种群使用如交叉突变等操作之后进行.
      * 
-     * @param selectionMethod value
+     * @param selectionMethod value 值
      */
     public void setSelectionMethod(ISelectionMethod selectionMethod) {
         this.selectionMethod = selectionMethod;
     }
 
     /**
-     * Fitness function to apply to the population.
+     * 应用于种群的适应度函数.
      * <P>
-     * The property sets fitness function, which is used to evaluate
-     * usefulness of population's chromosomes. Setting new fitness function causes recalculation
-     * of fitness values for all population's members and new best member will be found.
+     * 该属性设置适应度函数，用于评估种群染色特的有效性. 设置新的适应度函数会导致重新计算所有种群成员的适应值，并找到新的最佳成员.
      */
     public IFitnessFunction getFitnessFunction() {
         return fitnessFunction;
     }
 
     /**
-     * Fitness function to apply to the population.
+     * 应用于种群的适应度函数.
      * <P>
-     * The property sets fitness function, which is used to evaluate
-     * usefulness of population's chromosomes. Setting new fitness function causes recalculation
-     * of fitness values for all population's members and new best member will be found.
+     * 该属性设置适应度函数，用于评估种群染色特的有效性. 设置新的适应度函数会导致重新计算所有种群成员的适应值，并找到新的最佳成员.
      * 
      * @param fitnessFunction IFitnessFunction
      */
@@ -490,72 +481,62 @@ public class Population {
     }
 
     /**
-     * Maximum fitness of the population.
+     * 种群的最大适应度.
      * <p>
-     * The property keeps maximum fitness of chromosomes currently existing
-     * in the population.
+     * 该属性为种群中当前存在的染色体最大适应度.
      * <p>
-     * The property is recalculate only after {@link #selection()}
-     * or {@link #migrate} was done.
+     * 该属性只有在{@link #selection()}或{@link #migrate}后进行重算.
      */
     public double getFitnessMax() {
         return fitnessMax;
     }
 
     /**
-     * Summary fitness of the population.
+     * 种群适应度的汇总值.
      * <p>
-     * The property keeps summary fitness of all chromosome existing in the
-     * population.
+     * 该属性为种群中当前存在的染色体适应度的汇总值.
      * <p>
-     * The property is recalculate only after {@link #selection()}
-     * or {@link #migrate} was done.
+     * 该属性只有在{@link #selection()}或{@link #migrate}后进行重算.
      */
     public double getFitnessSum() {
         return fitnessSum;
     }
 
     /**
-     * Average fitness of the population.
+     * 种群适应度的平均值.
      * <p>
-     * The property keeps average fitness of all chromosome existing in the
-     * population.
+     * 该属性为种群中当前存在的染色体适应度的平均值.
      * <p>
-     * The property is recalculate only after {@link #selection()}
-     * or {@link #migrate} was done.
+     * 该属性只有在{@link #selection()}或{@link #migrate}后进行重算.
      */
     public double getFitnessAvg() {
         return fitnessAvg;
     }
 
     /**
-     * Best chromosome of the population.
+     * 种群中的最佳染色体.
      * <p>
-     * The property keeps the best chromosome existing in the population
-     * or null if all chromosomes have 0 fitness.
+     * 该属性持为最佳种群中存在的最佳染色体，或者当所有染色体的适应度为0时为null
      */
     public IChromosome getBestChromosome() {
         return bestChromosome;
     }
 
     /**
-     * Size of the population.
+     * 种群的大小.
      * <p>
-     * The property keeps initial (minimal) size of population.
-     * Population always returns to this size after selection operator was applied,
-     * which happens after {@link #selection} or {@link #runEpoch} methods
-     * call.
+     * 该属性为种群的初始（最小）规模. 种群的规模始终会在{@link #selection}或{@link #runEpoch}方法调用，执行选择操作之后返回到该值大小
      */
     public int getSize() {
         return size;
     }
  
     /**
-     * Get chromosome with specified index.
+     * 获取指定下标的染色体.
      * <p>
-     * Allows to access individuals of the population.
+     * 允许访问染色体中的个体
      * 
-     * @param index Chromosome's index to retrieve.
+     * @param index 染色体的下标.
      */
     public IChromosome getPopulation(int index) {
         return this.population.get(index);
