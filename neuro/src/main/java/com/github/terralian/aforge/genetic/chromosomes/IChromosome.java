@@ -10,64 +10,64 @@ package com.github.terralian.aforge.genetic.chromosomes;
 import com.github.terralian.aforge.genetic.fitness.IFitnessFunction;
 
 /**
- * Chromosome interface.
+ * 染色体接口.
  * <p>
- * The interfase should be implemented by all classes, which implement particular chromosome type.
+ * 该接口应该由实现特定染色体类型的所有类实现.
  */
 public interface IChromosome extends Comparable<IChromosome> {
 
     /**
-     * Chromosome's fitness value.
+     * 获得染色体的适应度.
      * <p>
-     * The fitness value represents chromosome's usefulness - the greater the value, the more useful it is.
+     * 适应度的值表示染色体是否有用，值越大，表示越有用.
      */
     double getFitness();
 
     /**
-     * Generate random chromosome value.
+     * 生成随机染色体值.
      * <p>
-     * Regenerates chromosome's value using random number generator.
+     * 使用随机数生成器重新生成染色体的值
      */
     void generate();
     
     /**
-     * Create new random chromosome with same parameters (factory method).
+     * 使用相同的参数创建一个新的随机数染色体（工厂方法）.
      * <p>
-     * The method creates new chromosome of the same type, but randomly
-     * initialized. The method is useful as factory method for those classes, which work
-     * with chromosome's interface, but not with particular chromosome class.
+     * 该方法创建相同类型的染色体，但是随机初始化. 该方法作为工厂方法，用于某些处理染色体接口，但是不管指定染色体类型的类.
      */
     IChromosome createNew();
 
     /**
-     * Clone the chromosome.
+     * 克隆染色体.
      * <p>
-     * The method clones the chromosome returning the exact copy of it.
+     * 该方法返回一个精确的染色体克隆.
+     * 
+     * @return 返回该染色体的克隆.
      */
     IChromosome clone();
 
     /**
-     * Mutation operator.
+     * 突变操作.
      * <p>
-     * The method performs chromosome's mutation, changing its part randomly.
+     * 该方法执行染色体突变，随机的改变其部分.
      */
     void mutate();
 
     /**
-     * Crossover operator.
+     * 交叉操作.
      * <p>
-     * The method performs crossover between two chromosomes � interchanging some parts of chromosomes.
+     * 该方法对两个染色体执行交叉操作，互换两者的一部分.
      * 
-     * @param pair Pair chromosome to crossover with.
+     * @param pair 需要交换的配对的染色体.
      */
     void crossover(IChromosome pair);
 
     /**
-     * Evaluate chromosome with specified fitness function.
+     * 用指定的适应度函数计算染色体.
      * <p>
-     * Calculates chromosome's fitness using the specifed fitness function.
+     * 使用指定的适应度函数计算染色体的适应度.
      * 
-     * @param function Fitness function to use for evaluation of the chromosome.
+     * @param function 用于染色体评估的适应度函数.
      */
     void evaluate(IFitnessFunction function);
 }

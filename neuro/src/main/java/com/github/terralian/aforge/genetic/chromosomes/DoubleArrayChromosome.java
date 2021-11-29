@@ -12,131 +12,120 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.github.terralian.aforge.math.random.IRandomNumberGenerator;
 
 /**
- * Double array chromosome.
+ * Double数组染色体.
  * <p>
- * Double array chromosome represents array of double values.
- * Array length is in the range of [2, 65536].
+ * Double数组染色体表示double类型值的数组，数组长度在[2, 65536]之间.
  * <p>
- * See documentation to {@link #mutate} and {@link #crossover} methods
- * for information regarding implemented mutation and crossover operators.</para>
+ * 关于已实现的变异和交叉运算的信息，请参阅{@link #mutate}和{@link #crossover}方法文档
  */
 public class DoubleArrayChromosome extends ChromosomeBase {
     /**
-     * Chromosome generator.
+     * 染色体生成器.
      * <p>
-     * This random number generator is used to initialize chromosome's genes,
-     * which is done by calling {@link #generate()} method.
+     * 该随机数生成器用于在{@link #generate()}调用时 初始化染色体的基因.
      */
     protected IRandomNumberGenerator chromosomeGenerator;
     
     /**
-     * Mutation multiplier generator.
+     * 突变乘数生成器.
      * <p>
-     * This random number generator is used to generate random multiplier values,
-     * which are used to multiply chromosome's genes during mutation.
+     * 该随机数生成器用于生成随机突变乘数，用于在突变时乘于染色体的基因.
      */
     protected IRandomNumberGenerator mutationMultiplierGenerator;
 
     /**
-     * Mutation addition generator.
+     * 突变加数生成器.
      * <p>
-     * This random number generator is used to generate random addition values,
-     * which are used to add to chromosome's genes during mutation.
+     * 该随机数生成器用于生成随机加数，用于在突变时与染色体基因相加.
      */
     protected IRandomNumberGenerator mutationAdditionGenerator;
 
     /**
-     * Random number generator for crossover and mutation points selection.
+     * 用于交叉和突变点选择的随机数生成器.
      * <p>
-     * This random number generator is used to select crossover and mutation points.
+     * 该随机数生成器用于选择交叉和突变点.
      */
     protected static ThreadLocalRandom rand = ThreadLocalRandom.current();
 
     /**
-     * Chromosome's maximum length.
+     * 染色体最大长度.
      * <p>
-     * Maxim chromosome's length in array elements.
+     * 染色体表示的数组的最大长度.
      */
     public final int maxLength = 65536;
 
     /**
-     * Chromosome's length in number of elements.
+     * 当前染色体数组的元素长度.
      */
     private int length;
 
     /**
-     * Chromosome's value.
+     * 染色体的值.
      */
     protected double[] val = null;
 
-    // balancers to control type of mutation and crossover
+    // 控制交叉和突变类型的平衡器
     private double mutationBalancer = 0.5;
     private double crossoverBalancer = 0.5;
 
     /**
-     * Initializes a new instance of the {@link DoubleArrayChromosome} class.
+     * 初始化{@link DoubleArrayChromosome}类的新的实例.
      * <p>
-     * The constructor initializes the new chromosome randomly by calling {@link #generate()} method.
+     * 该构造函数通过调用 {@link #generate()}方法初始化生成新的随机染色体.
      * 
-     * @param chromosomeGenerator Chromosome generator - random number generator, which is used to initialize chromosome's genes, which is
-     *        done by calling {@link #generate} method or in class constructor.
-     * @param mutationMultiplierGenerator Mutation multiplier generator - random number generator, which is used to generate random
-     *        multiplier values, which are used to multiply chromosome's genes during mutation.
-     * @param mutationAdditionGenerator Mutation addition generator - random number generator, which is used to generate random addition
-     *        values, which are used to add to chromosome's genes during mutation.
-     * @param length Chromosome's length in array elements, [2, {@link #maxLength}].
+     * @param chromosomeGenerator 染色体生成器 - 随机数生成器，用于初始化染色体的基因，在{@link #generate}方法进行调用，类构造器也会调用.
+     * @param mutationMultiplierGenerator 突变乘数生成器 - 随机数生成器, 用于生成随机突变乘数，用于在突变时乘于染色体的基因.
+     * @param mutationAdditionGenerator 突变加数生成器 - 随机数生成器, 用于生成随机加数，用于在突变时与染色体基因相加.
+     * @param length 染色体表示的数组的长度.
      */
     public DoubleArrayChromosome(IRandomNumberGenerator chromosomeGenerator, IRandomNumberGenerator mutationMultiplierGenerator,
             IRandomNumberGenerator mutationAdditionGenerator, int length) {
 
-        // save parameters
+        // 保存参数
         this.chromosomeGenerator = chromosomeGenerator;
         this.mutationMultiplierGenerator = mutationMultiplierGenerator;
         this.mutationAdditionGenerator = mutationAdditionGenerator;
         this.length = Math.max(2, Math.min(maxLength, length));;
 
-        // allocate array
+        // 分配数组空间
         val = new double[length];
 
-        // generate random chromosome
+        // 生成随机染色体
         generate();
     }
 
     /**
-     * Initializes a new instance of the {@link DoubleArrayChromosome} class.
+     * 初始化{@link DoubleArrayChromosome}类的新的实例.
      * <p>
-     * The constructor initializes the new chromosome with specified values
+     * 该构造器使用指定值初始化新的染色体.
      * 
-     * @param chromosomeGenerator Chromosome generator - random number generator, which is used to initialize chromosome's genes, which is
-     *        done by calling {@link #generate} method or in class constructor.
-     * @param mutationMultiplierGenerator Mutation multiplier generator - random number generator, which is used to generate random
-     *        multiplier values, which are used to multiply chromosome's genes during mutation.
-     * @param mutationAdditionGenerator Mutation addition generator - random number generator, which is used to generate random addition
-     *        values, which are used to add to chromosome's genes during mutation.
-     * @param values Values used to initialize the chromosome.
-     * @throws IndexOutOfBoundsException Invalid length of values array.
+     * @param chromosomeGenerator 染色体生成器 - 随机数生成器，用于初始化染色体的基因，在{@link #generate}方法进行调用，类构造器也会调用.
+     * @param mutationMultiplierGenerator 突变乘数生成器 - 随机数生成器, 用于生成随机突变乘数，用于在突变时乘于染色体的基因.
+     * @param mutationAdditionGenerator 突变加数生成器 - 随机数生成器, 用于生成随机加数，用于在突变时与染色体基因相加.
+     * @param values 用于初始化染色体的值.
+     * @throws IndexOutOfBoundsException 无效的数组长度.
      */
     public DoubleArrayChromosome(IRandomNumberGenerator chromosomeGenerator, IRandomNumberGenerator mutationMultiplierGenerator,
             IRandomNumberGenerator mutationAdditionGenerator, double[] values) {
         if ((values.length < 2) || (values.length > maxLength))
             throw new IndexOutOfBoundsException("Invalid length of values array.");
 
-        // save parameters
+        // 保存参数
         this.chromosomeGenerator = chromosomeGenerator;
         this.mutationMultiplierGenerator = mutationMultiplierGenerator;
         this.mutationAdditionGenerator = mutationAdditionGenerator;
         this.length = values.length;
 
-        // copy specified values
+        // 复制指定值
         val = (double[]) values.clone();
     }
 
     /**
-     * Initializes a new instance of the {@link #DoubleArrayChromosome} class.
+     * 初始化{@link DoubleArrayChromosome}类的新的实例.
      * <p>
-     * This is a copy constructor, which creates the exact copy of specified chromosome.
+     * 这是一个复制构造器，用于创建一个指定染色体的精确复制.
      * 
-     * @param source Source chromosome to copy.
+     * @param source 需要复制的来源染色体.
      */
     public DoubleArrayChromosome(DoubleArrayChromosome source) {
         this.chromosomeGenerator = source.chromosomeGenerator;
@@ -147,22 +136,22 @@ public class DoubleArrayChromosome extends ChromosomeBase {
         this.mutationBalancer = source.mutationBalancer;
         this.crossoverBalancer = source.crossoverBalancer;
 
-        // copy genes
+        // 复制基因
         val = (double[]) source.val.clone();
     }
 
     /**
-     * Get string representation of the chromosome.
+     * 获取表示染色体的字符串.
      * 
-     * @return Returns string representation of the chromosome.
+     * @return 返回表示染色体的字符串.
      */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        // append first gene
+        // 追加第一个基因
         sb.append(val[0]);
-        // append all other genes
+        // 追加其余基因
         for (int i = 1; i < length; i++) {
             sb.append(' ');
             sb.append(val[i]);
@@ -172,24 +161,22 @@ public class DoubleArrayChromosome extends ChromosomeBase {
     }
 
     /**
-     * Generate random chromosome value.
+     * 生成随机染色体值.
      * <p>
-     * Regenerates chromosome's value using random number generator.
+     * 用随机数生成器重新生成染色体值.
      */
     @Override
     public void generate() {
         for (int i = 0; i < length; i++) {
-            // generate next value
+            // 生成下一个随机数
             val[i] = chromosomeGenerator.next();
         }
     }
 
     /**
-     * Create new random chromosome with same parameters (factory method).
+     * 用相同的参数创建一个新的随机染色体（工厂方法）.
      * <p>
-     * The method creates new chromosome of the same type, but randomly
-     * initialized. The method is useful as factory method for those classes, which work
-     * with chromosome's interface, but not with particular chromosome type.
+     * 该方法创建相同类型的染色体，但是随机初始化. 该方法作为工厂方法，用于某些处理染色体接口，但是不管指定染色体类型的类.
      */
     @Override
     public IChromosome createNew() {
@@ -197,11 +184,11 @@ public class DoubleArrayChromosome extends ChromosomeBase {
     }
 
     /**
-     * Clone the chromosome.
+     * 克隆染色体.
      * <p>
-     * The method clones the chromosome returning the exact copy of it.
+     * 该方法返回一个精确的染色体克隆.
      * 
-     * @return Return's clone of the chromosome.
+     * @return 返回该染色体的克隆.
      */
     @Override
     public IChromosome clone() {
@@ -209,17 +196,12 @@ public class DoubleArrayChromosome extends ChromosomeBase {
     }
 
     /**
-     * Mutation operator.
+     * 突变操作.
      * <p>
-     * The method performs chromosome's mutation, adding random number
-     * to chromosome's gene or multiplying the gene by random number. These random
-     * numbers are generated with help of {@link #mutationMultiplierGenerator} and {@link #mutationAdditionGenerator} generators.
+     * 该方法执行染色体突变，将染色体基因加上随机数，或者乘于随机数. 这些随机数通过{@link #mutationMultiplierGenerator} 和 {@link #mutationAdditionGenerator} 生成.
      * 
-     * <p>The exact type of mutation applied to the particular gene
-     * is selected randomly each time and depends on {@link #mutationBalancer}
-     * Before mutation is done a random number is generated in [0, 1] range - if the
-     * random number is smaller than {@link #mutationBalancer}, then multiplication
-     * mutation is done, otherwise addition mutation.
+     * <p>
+     * 突变的确切类型每次都会进行选择，并且取决于{@link #mutationBalancer}. 在突变完成前，一个随机数生成在[0, 1]区间 - 若该值小于{@link #mutationBalancer}则使用乘法，否则使用加法
      */
     @Override
     public void mutate() {
@@ -233,53 +215,41 @@ public class DoubleArrayChromosome extends ChromosomeBase {
     }
 
     /**
-     * Crossover operator.
+     * 交叉操作.
      * 
-     * <p>The method performs crossover between two chromosomes, selecting
-     * randomly the exact type of crossover to perform, which depends on {@link #crossoverBalancer}
-     * Before crossover is done a random number is generated in [0, 1] range - if the
-     * random number is smaller than {@link #crossoverBalancer}, then the first crossover
-     * type is used, otherwise second type is used.
-     * 
-     * <p>The <b>first crossover type</b> is based on interchanging
-     * range of genes (array elements) between these chromosomes and is known
-     * as one point crossover. A crossover point is selected randomly and chromosomes
-     * interchange genes, which start from the selected point.
-     * 
-     * <p>The <b>second crossover type</b> is aimed to produce one child, which genes'
-     * values are between corresponding genes of parents, and another child, which genes'
-     * values are outside of the range formed by corresponding genes of parents. 
-     * Let take, for example, two genes with 1.0 and 3.0 valueû (of course chromosomes have
-     * more genes, but for simplicity lets think about one). First of all we randomly choose
-     * a factor in the [0, 1] range, let's take 0.4. Then, for each pair of genes (we have
-     * one pair) we calculate difference value, which is 2.0 in our case. In the result we�ll
-     * have two children � one between and one outside of the range formed by parents genes' values.
-     * We may have 1.8 and 3.8 children, or we may have 0.2 and 2.2 children. As we can see
-     * we add/subtract (chosen randomly) <i>difference * factor</i>. So, this gives us exploration
-     * in between and in near outside. The randomly chosen factor is applied to all genes
-     * of the chromosomes participating in crossover.
-     * 
-     * @param pair Pair chromosome to crossover with.
+     * <p>
+     * 该方法在两条染色体间执行交叉，随机选择交叉的确切类型，取决于{@link #crossoverBalancer}. 在突变完成前，一个随机数生成在[0, 1]区间 ，若该值小于{@link #crossoverBalancer}则使用乘法，否则使用加法
+     * <p>
+     * <b>第一种交叉类型（first crossover type）</b> 基于基因的交换位置(数组元素) 这些染色体间的交叉称为单点交叉. 随机选择一个交叉点，染色体交换在该点交换基因.
+     * <p>
+     * <b>第二种交叉（second crossover type）</b>旨在生成一个孩子，其基因值位于父母的基因之间，另一个孩子，其基因在父母基因范围之外.
+     * <p> 
+     * 举个例子，两个基因为1.0和3.0（当然染色体含有更多基因，这里为了简单）. 首先我们随机选择[0,1]范围内的一个因子，这里取0.4. 
+     * 接着，对于每对基因（我们有一对），我们计算其差值，在该例子为2.0. 在该结果中，我们会有两个孩子，一个在父母基因之间，一个在之外.
+     * 我们可能有孩子为1.8和3.8，或者可能为0.2和2.2.正如我们所看到的，我们增加/减少（随机选择）* 差异因子，这让我们探索了基因值之内与之外的情况，随机选择的因子应用于所有参与交叉的染色体基因.
+     * <p>
+     * <b>译注：</b> 该例子翻译困难，代码基本为ab两个基因， c =（a - b） * 因子， a = a - c, b = b + c， 通过这个操作将基因值修改到两者基因之内或者之外.
+     * 但是，代码和例子不同，实际要么结果都在内部，要么都在外部，且因子也有可能取负数([-1, 1])， 不知道是不是版本关系，不过影响不大.
      */
     @Override
     public void crossover(IChromosome pair) {
         DoubleArrayChromosome p = (DoubleArrayChromosome) pair;
 
-        // check for correct pair
+        // 检查配对是否正确
         if ((p != null) && (p.length == length)) {
             if (rand.nextDouble() < crossoverBalancer) {
-                // crossover point
+                // 交叉点
                 int crossOverPoint = rand.nextInt(length - 1) + 1;
-                // length of chromosome to be crossed
+                // 待杂交染色体的长度
                 int crossOverLength = length - crossOverPoint;
-                // temporary array
+                // 临时数组
                 double[] temp = new double[crossOverLength];
 
-                // copy part of first (this) chromosome to temp
+                // 将第一（对）染色体复制到临时数组（染色体）
                 System.arraycopy(val, crossOverPoint, temp, 0, crossOverLength);
-                // copy part of second (pair) chromosome to the first
+                // 将第二（对）染色体复制到第一上
                 System.arraycopy(p.val, crossOverPoint, val, crossOverPoint, crossOverLength);
-                // copy temp to the second
+                // 将临时数组复制到第二上
                 System.arraycopy(temp, 0, p.val, crossOverPoint, crossOverLength);
             } else {
                 double[] pairVal = p.val;
@@ -290,7 +260,7 @@ public class DoubleArrayChromosome extends ChromosomeBase {
 
                 for (int i = 0; i < length; i++) {
                     double portion = (val[i] - pairVal[i]) * factor;
-
+                    
                     val[i] -= portion;
                     pairVal[i] += portion;
                 }
@@ -299,78 +269,66 @@ public class DoubleArrayChromosome extends ChromosomeBase {
     }
 
     /**
-     * Chromosome's length.
+     * 染色体长度
      * <p>
-     * Length of the chromosome in array elements.
+     * 染色体的数组元素.
      */
     public int getLength() {
         return length;
     }
 
     /**
-     * Chromosome's value.
+     * 染色体的值.
      * <p>
-     * Current value of the chromosome.
+     * 染色体的当前值.
      */
     public double[] getValue() {
         return val;
     }
     
     /**
-     * Mutation balancer to control mutation type, [0, 1].
+     * 控制突变类型的突变平衡器， [0, 1].
      * <p>
-     * The property controls type of mutation, which is used more
-     * frequently. A random number is generated each time before doing mutation -
-     * if the random number is smaller than the specified balance value, then one
-     * mutation type is used, otherwse another. See {@link #mutate()} method
-     * for more information.
+     * 该属性控制突变类型，使用频繁. 在每次突变前生成一个随机数，若随机数小于指定的平衡值，则使用一个突变类型，否则使用另一个.
+     * 看{@link #mutate()}方法获得更多信息.
      * <p>
-     * Default value is set to <b>0.5</b>.
+     * 默认值为 <b>0.5</b>.
      */
     public double getMutationBalancer() {
         return mutationBalancer;
     }
 
     /**
-     * Mutation balancer to control mutation type, [0, 1].
+     * 控制突变类型的突变平衡器， [0, 1].
      * <p>
-     * The property controls type of mutation, which is used more
-     * frequently. A random number is generated each time before doing mutation -
-     * if the random number is smaller than the specified balance value, then one
-     * mutation type is used, otherwse another. See {@link #mutate()} method
-     * for more information.
+     * 该属性控制突变类型，使用频繁. 在每次突变前生成一个随机数，若随机数小于指定的平衡值，则使用一个突变类型，否则使用另一个.
+     * 看{@link #mutate()}方法获取更多信息.
      * <p>
-     * Default value is set to <b>0.5</b>.
+     * 默认值为 <b>0.5</b>.
      */
     public void setMutationBalancer(double mutationBalancer) {
         this.mutationBalancer = mutationBalancer;
     }
 
     /**
-     * Crossover balancer to control crossover type, [0, 1].
+     * 控制交叉类型的交叉平衡器, [0, 1].
      * <p>
-     * The property controls type of crossover, which is used more
-     * frequently. A random number is generated each time before doing crossover -
-     * if the random number is smaller than the specified balance value, then one
-     * crossover type is used, otherwse another. See {@link #crossover} method
-     * for more information.
+     * 该属性控制交叉类型，使用频繁. 在每次交叉之前，生成一个随机数，若随机数小于指定的平衡值，则使用一个交叉类型，否则使用另一个.
+     * 看{@link #crossover}方法获取更多信息.
      * <p>
-     * Default value is set to <b>0.5</b>.
+     * 默认值为 <b>0.5</b>.
      */
     public double getCrossoverBalancer() {
         return crossoverBalancer;
     }
 
     /**
-     * Crossover balancer to control crossover type, [0, 1].
+     * 控制交叉类型的交叉平衡器, [0, 1].
      * <p>
-     * The property controls type of crossover, which is used more
-     * frequently. A random number is generated each time before doing crossover -
-     * if the random number is smaller than the specified balance value, then one
-     * crossover type is used, otherwse another. See {@link #crossover} method
-     * for more information.
+     * 该属性控制交叉类型，使用频繁. 在每次交叉之前，生成一个随机数，若随机数小于指定的平衡值，则使用一个交叉类型，否则使用另一个.
+     * 看{@link #crossover}方法获取更多信息.
      * <p>
-     * Default value is set to <b>0.5</b>.
+     * 默认值为 <b>0.5</b>.
      */
     public void setCrossoverBalancer(double crossoverBalancer) {
         this.crossoverBalancer = crossoverBalancer;

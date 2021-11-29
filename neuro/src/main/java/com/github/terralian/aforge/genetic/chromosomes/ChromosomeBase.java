@@ -10,14 +10,13 @@ package com.github.terralian.aforge.genetic.chromosomes;
 import com.github.terralian.aforge.genetic.fitness.IFitnessFunction;
 
 /**
- * Chromosomes' base class.
+ * 染色体基类.
  * <p>
- * The base class provides implementation of some {@link IChromosome}
- * methods and properties, which are identical to all types of chromosomes.
+ * 该基类提供了一些{@link IChromosome}接口的通用方法实现和通用属性，这些属性和方法在所有染色体间一致.
  */
 public abstract class ChromosomeBase implements IChromosome {
 
-    /** Chromosome's fitness value. */
+    /** 染色体的适应度值. */
     protected double fitness = 0;
 
     @Override
@@ -26,11 +25,10 @@ public abstract class ChromosomeBase implements IChromosome {
     }
 
     /**
-     * Compare two chromosomes.
+     * 比较两个染色体.
      * 
-     * @param o Binary chromosome to compare to.
-     * @return Returns comparison result, which equals to 0 if fitness values of both chromosomes are equal, 1 if fitness value of this
-     *         chromosome is less than fitness value of the specified chromosome, -1 otherwise.
+     * @param o 需要比较的二元染色体（Binary chromosome）.
+     * @return 返回比较结果，两者适应度值相等返回0，此染色体小于参数返回1，大于则返回-1
      */
     @Override
     public int compareTo(IChromosome o) {

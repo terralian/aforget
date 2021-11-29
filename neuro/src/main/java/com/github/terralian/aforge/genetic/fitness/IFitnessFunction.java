@@ -10,23 +10,21 @@ package com.github.terralian.aforge.genetic.fitness;
 import com.github.terralian.aforge.genetic.chromosomes.IChromosome;
 
 /**
- * Fitness function interface.
+ * 适应度函数接口.
  * <p>
- * The interface should be implemented by all fitness function
- * classes, which are supposed to be used for calculation of chromosomes
- * fitness values. All fitness functions should return positive (<b>greater
- * then zero</b>) value, which indicates how good is the evaluated chromosome - 
- * the greater the value, the better the chromosome.
+ * 该接口应该由所有适应度函数实现，这些函数用于计算染色体的适应度值.
+ * 所有适应度函数都应该返回正值（<b>大于0</b>），适应度用于评估染色体有多好 - 值越大，染色体越好
  */
+@FunctionalInterface
 public interface IFitnessFunction {
 
     /**
-     * Evaluates chromosome.
+     * 评估染色体.
      * <p>
-     * The method calculates fitness value of the specified chromosome.
+     * 该方法对指定染色体计算适应度
      * 
-     * @param chromosome Chromosome to evaluate.
-     * @return Returns chromosome's fitness value.
+     * @param chromosome 需要评估的染色体.
+     * @return Returns 染色体的适应度.
      */
     double evaluate(IChromosome chromosome);
 }
