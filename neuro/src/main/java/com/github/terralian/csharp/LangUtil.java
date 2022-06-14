@@ -1,5 +1,7 @@
 package com.github.terralian.csharp;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Comparator;
 import java.util.List;
 
@@ -50,6 +52,20 @@ public class LangUtil {
      */
     public static <E extends Comparable<E>> Comparator<E> defaultSort() {
         return (a, b) -> a.compareTo(b);
+    }
+
+    /**
+     * 将二进制数组转long
+     * 
+     * @param input 输入的数组
+     * @param littleEndian 是否为小端序，默认为大端序
+     */
+    public static long toLong(byte[] input, boolean littleEndian) {
+        ByteBuffer buffer = ByteBuffer.wrap(input, 0, 8);
+        if (littleEndian) {
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+        }
+        return buffer.getLong();
     }
 
     private LangUtil() {}
