@@ -5,7 +5,7 @@
 
 	<groupId>com.github.terralian</groupId>
 	<artifactId>aforget.neuro</artifactId>
-	<version>2.2.0-Simple</version>
+	<version>2.2.0S</version>
 	<packaging>jar</packaging>
 
 	<name>aforget.neuro</name>
@@ -38,6 +38,20 @@
 					<testSource>${java.version}</testSource>
 					<testTarget>${java.version}</testTarget>
 				</configuration>
+			</plugin>
+			<!--配置生成源码包 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
