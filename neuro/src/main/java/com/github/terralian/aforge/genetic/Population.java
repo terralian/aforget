@@ -203,7 +203,7 @@ public class Population {
         // 当前种群大小
         int size = population.size();
         // 创建种群的临时副本
-        List<IChromosome> tempPopulation = population.subList(0, size);
+        List<IChromosome> tempPopulation = new ArrayList<>(population.subList(0, size));
         // 清空当前种群，并重新随机填充
         population.clear();
 
