@@ -42,7 +42,7 @@ SO，由于目的原因，目前仅做AForge.NET类库中，Neuro相关部分移
 - 使用maven进行依赖管理，~~暂未发布maven库，可手动下载编译~~
 
 ```
-git clone https://github.com/TerraLian/terra-commons.git
+git clone https://github.com/terralian/terra-commons.git
 ```
 
 
